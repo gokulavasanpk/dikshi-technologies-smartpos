@@ -112,7 +112,7 @@ export default function TextileShowcaseBanner() {
   };
 
   return (
-    <section id="textile-solutions" className="scroll-mt-24 sm:scroll-mt-28 py-14 sm:py-20 bg-white text-slate-900 relative overflow-hidden">
+    <section id="textile-solutions" className="scroll-mt-24 sm:scroll-mt-28 py-8 sm:py-16 lg:py-20 bg-white text-slate-900 relative overflow-hidden">
       
       {/* Subtle Ambient Radial Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-96 bg-blue-50/60 rounded-full blur-3xl pointer-events-none -z-10" />

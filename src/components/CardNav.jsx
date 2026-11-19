@@ -65,10 +65,10 @@ export default function CardNav({
           )}
           
           <div className="flex flex-col min-w-0">
-            <span className="font-extrabold text-sm sm:text-[15px] tracking-tight text-slate-900 truncate font-display">
+            <span className="font-extrabold text-xs sm:text-[15px] tracking-tight text-slate-900 whitespace-nowrap font-display">
               DIKSHI TECHNOLOGIES
             </span>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium font-display tracking-tight -mt-0.5 truncate">
+            <span className="text-[9.5px] sm:text-[11px] text-slate-500 font-medium font-display tracking-tight -mt-0.5 whitespace-nowrap">
               Cloth &amp; Fancy SmartPOS
             </span>
           </div>

@@ -97,7 +97,7 @@ export default function MultiPlatformDeviceSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="multiplatform" className="scroll-mt-24 sm:scroll-mt-28 relative py-16 sm:py-24 bg-slate-50/60 overflow-hidden">
+    <section ref={sectionRef} id="multiplatform" className="scroll-mt-24 sm:scroll-mt-28 relative py-10 sm:py-16 lg:py-24 bg-slate-50/60 overflow-hidden">
       
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-[600px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50/70 via-indigo-50/30 to-transparent pointer-events-none -z-10" />
@@ -228,17 +228,17 @@ export default function MultiPlatformDeviceSection() {
                       <div className="space-y-1.5 text-xs">
                         <div className="p-2 rounded-xl bg-slate-800/50 border border-slate-800 flex justify-between items-center">
                           <div className="min-w-0 pr-2">
-                            <p className="font-bold text-white truncate text-[11px]">Kanjivaram Silk Saree</p>
+                            <p className="font-bold text-white break-words text-[11px] leading-tight">Kanjivaram Silk Saree</p>
                             <span className="text-[9px] font-mono text-slate-400">1 × ₹4,499 (Size: Free)</span>
                           </div>
-                          <span className="font-mono font-bold text-slate-200 text-xs">₹4,499</span>
+                          <span className="font-mono font-bold text-slate-200 text-xs flex-shrink-0">₹4,499</span>
                         </div>
                         <div className="p-2 rounded-xl bg-slate-800/50 border border-slate-800 flex justify-between items-center">
                           <div className="min-w-0 pr-2">
-                            <p className="font-bold text-white truncate text-[11px]">Gold Flame Earrings</p>
+                            <p className="font-bold text-white break-words text-[11px] leading-tight">Gold Flame Earrings</p>
                             <span className="text-[9px] font-mono text-slate-400">1 × ₹1,299 (Jewelry)</span>
                           </div>
-                          <span className="font-mono font-bold text-slate-200 text-xs">₹1,299</span>
+                          <span className="font-mono font-bold text-slate-200 text-xs flex-shrink-0">₹1,299</span>
                         </div>
                       </div>
                     </div>

@@ -5,7 +5,7 @@ import PixelCard from './PixelCard';
 
 export default function HeroSection({ onExplorePOS, onBookDemo }) {
   return (
-    <section id="hero" className="relative pt-10 sm:pt-14 pb-16 sm:pb-24 overflow-hidden bg-white">
+    <section id="hero" className="relative pt-6 sm:pt-12 pb-10 sm:pb-20 overflow-hidden bg-white">
       
       {/* Background radial glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/70 via-sky-50/30 to-transparent pointer-events-none -z-10" />

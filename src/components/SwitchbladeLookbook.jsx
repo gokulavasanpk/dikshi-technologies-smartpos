@@ -361,7 +361,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
   const activeProduct = activeKey ? PRODUCTS.find(p => p.key === activeKey) : null;
 
   return (
-    <section className="relative bg-slate-50/60 overflow-hidden pt-12 sm:pt-20 pb-8 select-none w-full">
+    <section className="relative bg-slate-50/60 overflow-hidden pt-8 sm:pt-16 pb-6 sm:pb-8 select-none w-full">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title */}
@@ -468,7 +468,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         onTouchMove={handlePointerMove}
         onTouchEnd={handlePointerUp}
         className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
-        style={{ height: 'clamp(420px, 46vw, 560px)' }}
+        style={{ height: 'clamp(340px, 42vw, 540px)' }}
       >
         {/* Track Cards */}
         <div className="relative w-full h-full pointer-events-none">
@@ -539,25 +539,25 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
       </div>
 
       {/* Active Item Details HUD Bar */}
-      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 mt-6 mb-6 relative z-30">
-        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full overflow-hidden">
+      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 mt-4 sm:mt-6 mb-4 sm:mb-6 relative z-30">
+        <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full overflow-hidden">
           <div className="flex items-center gap-2.5 sm:gap-3 w-full min-w-0">
-            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#0456DD] flex items-center justify-center font-bold text-lg flex-shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-50 text-[#0456DD] flex items-center justify-center font-bold text-base sm:text-lg flex-shrink-0">
               🏷️
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                <span className="font-mono text-xs uppercase font-bold text-[#0456DD] truncate max-w-[130px] sm:max-w-none">
+                <span className="font-mono text-xs uppercase font-bold text-[#0456DD] break-words">
                   {activeProduct ? activeProduct.category : 'Dikshi Signature Lookbook'}
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 flex-shrink-0">
                   {activeProduct ? `Stock: ${activeProduct.stock} units` : 'Runway Active'}
                 </span>
               </div>
-              <h3 className="text-xs sm:text-base font-bold text-slate-900 truncate w-full block">
+              <h3 className="text-xs sm:text-base font-bold text-slate-900 break-words leading-snug w-full block mt-0.5">
                 {activeProduct ? `${activeProduct.label} — ${activeProduct.desc}` : 'Base Runway Apparel — White Crop Top & Denim Jeans'}
               </h3>
-              <p className="text-xs text-slate-500 font-mono truncate">
+              <p className="text-[11px] sm:text-xs text-slate-500 font-mono break-all mt-0.5">
                 {activeProduct ? `SKU: ${activeProduct.sku}` : 'SKU: DIK-BASE-00'}
               </p>
             </div>

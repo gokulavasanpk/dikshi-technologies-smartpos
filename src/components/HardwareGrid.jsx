@@ -85,7 +85,7 @@ export default function HardwareGrid() {
   const [enablePhysics, setEnablePhysics] = useState(true);
 
   return (
-    <section id="hardware" className="scroll-mt-24 sm:scroll-mt-28 py-14 sm:py-20 bg-white">
+    <section id="hardware" className="scroll-mt-24 sm:scroll-mt-28 py-8 sm:py-16 lg:py-20 bg-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

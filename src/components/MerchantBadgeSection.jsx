@@ -72,7 +72,7 @@ export default function MerchantBadgeSection({ onShowToast }) {
     <section 
       ref={sectionRef}
       id="merchant-pass" 
-      className="scroll-mt-20 sm:scroll-mt-24 w-full py-14 sm:py-20 bg-slate-50/60 text-slate-900 relative overflow-hidden"
+      className="scroll-mt-20 sm:scroll-mt-24 w-full py-8 sm:py-16 lg:py-20 bg-slate-50/60 text-slate-900 relative overflow-hidden"
     >
       
       {/* Soft Ambient Radial Background Lights */}

@@ -27,7 +27,7 @@ export default function FaqSection() {
   const [openIdx, setOpenIdx] = useState(0);
 
   return (
-    <section id="faq" className="scroll-mt-24 sm:scroll-mt-28 py-14 sm:py-20 bg-slate-50/60">
+    <section id="faq" className="scroll-mt-24 sm:scroll-mt-28 py-8 sm:py-16 lg:py-20 bg-slate-50/60">
       <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
         
         <div className="text-center mb-10">

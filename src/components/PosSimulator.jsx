@@ -303,7 +303,7 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
                             <span className="text-[8px] font-mono uppercase font-bold text-[#0078D4] block truncate">
                               {item.category}
                             </span>
-                            <h4 className="font-bold text-[10px] sm:text-[11px] text-slate-900 truncate font-display leading-tight">
+                            <h4 className="font-bold text-[10px] sm:text-[11px] text-slate-900 line-clamp-2 break-words font-display leading-tight">
                               {item.name}
                             </h4>
                             <p className="text-[9px] font-mono text-slate-400 truncate">
@@ -393,7 +393,7 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
                         {cart.map((item, idx) => (
                           <div key={`${item.id}-${idx}`} className="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 border border-slate-100 text-[10px]">
                             <div className="min-w-0 pr-1.5">
-                              <p className="font-bold text-slate-800 truncate font-display text-[10px]">{item.name}</p>
+                              <p className="font-bold text-slate-800 break-words font-display text-[10px] leading-tight">{item.name}</p>
                               <span className="text-[8px] text-slate-400 font-mono">
                                 ₹{item.price} · Size: {item.size}
                               </span>

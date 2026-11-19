@@ -37,7 +37,7 @@ export default function Footer4({ isDemoModalOpen, setIsDemoModalOpen, onShowToa
 
   return (
     <>
-      <footer className="relative bg-[#070A12] text-slate-400 overflow-hidden pt-16 sm:pt-24 pb-8 font-display select-none">
+      <footer className="relative bg-[#070A12] text-slate-400 overflow-hidden pt-10 sm:pt-20 pb-8 font-display select-none">
         
         {/* Ambient Top Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-48 bg-gradient-to-b from-blue-600/10 via-transparent to-transparent pointer-events-none" />
@@ -47,7 +47,7 @@ export default function Footer4({ isDemoModalOpen, setIsDemoModalOpen, onShowToa
           {/* ============================================================== */}
           {/* 1. TOP NEWSLETTER SIGNUP BANNER                                 */}
           {/* ============================================================== */}
-          <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-6 sm:p-10 lg:p-12 border border-slate-800 shadow-2xl mb-16 sm:mb-20 overflow-hidden">
+          <div className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-4 sm:p-8 lg:p-12 border border-slate-800 shadow-2xl mb-10 sm:mb-16 overflow-hidden">
             
             {/* Background Corner Glow */}
             <div className="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />

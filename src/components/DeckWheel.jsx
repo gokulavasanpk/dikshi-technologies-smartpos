@@ -390,7 +390,7 @@ export default function DeckWheel({ onSelectCard }) {
   };
 
   return (
-    <section id="solutions-deck" className="scroll-mt-24 sm:scroll-mt-28 relative w-full bg-slate-50/60 overflow-hidden pt-12 sm:pt-16 pb-16 sm:pb-24 select-none">
+    <section id="solutions-deck" className="scroll-mt-24 sm:scroll-mt-28 relative w-full bg-slate-50/60 overflow-hidden pt-8 sm:pt-14 pb-10 sm:pb-20 select-none">
       
       {/* Section Headline */}
       <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-6 sm:mb-10">
@@ -430,7 +430,7 @@ export default function DeckWheel({ onSelectCard }) {
         onTouchEnd={handlePointerUp}
         onWheel={handleWheel}
         className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing flex justify-center items-start"
-        style={{ height: 'clamp(480px, 52vw, 680px)' }}
+        style={{ height: 'clamp(390px, 48vw, 650px)' }}
       >
         {/* Half-Oval Center Origin */}
         <div className="absolute top-[32%] sm:top-[34%] left-1/2 -translate-x-1/2 w-0 h-0">

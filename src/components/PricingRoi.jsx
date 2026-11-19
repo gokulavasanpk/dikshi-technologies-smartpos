@@ -60,7 +60,7 @@ export default function PricingRoi({ onBookDemo }) {
   ];
 
   return (
-    <section id="pricing" className="scroll-mt-24 sm:scroll-mt-28 py-14 sm:py-20 bg-white">
+    <section id="pricing" className="scroll-mt-24 sm:scroll-mt-28 py-8 sm:py-16 lg:py-20 bg-white">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -123,25 +123,25 @@ export default function PricingRoi({ onBookDemo }) {
             {/* Metrics Output Cards */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3.5 bg-slate-50 p-2.5 sm:p-4 rounded-2xl border border-slate-200 overflow-hidden">
               <div className="bg-white p-2.5 sm:p-3.5 rounded-xl border border-slate-100 shadow-sm min-w-0 overflow-hidden">
-                <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase block truncate">Hours Saved</span>
-                <span className="font-barlow font-black text-base sm:text-2xl text-slate-900 block mt-0.5 sm:mt-1 truncate">
+                <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase block break-words leading-tight">Hours Saved</span>
+                <span className="font-barlow font-black text-sm sm:text-2xl text-slate-900 block mt-0.5 sm:mt-1 whitespace-nowrap">
                   {hoursSaved} hrs
                 </span>
-                <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">Every month</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-500 block break-words">Every month</span>
               </div>
 
               <div className="bg-white p-2.5 sm:p-3.5 rounded-xl border border-slate-100 shadow-sm min-w-0 overflow-hidden">
-                <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase block truncate">Leakage Prevented</span>
-                <span className="font-barlow font-black text-base sm:text-2xl text-emerald-600 block mt-0.5 sm:mt-1 truncate">
+                <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase block break-words leading-tight">Leakage Prevented</span>
+                <span className="font-barlow font-black text-sm sm:text-2xl text-emerald-600 block mt-0.5 sm:mt-1 whitespace-nowrap">
                   ₹{theftLeakageSaved.toLocaleString('en-IN')}
                 </span>
-                <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">Barcode audits</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-500 block break-words">Barcode audits</span>
               </div>
 
               <div className="col-span-2 bg-[#0456DD] text-white p-3 sm:p-4 rounded-xl shadow-md min-w-0 overflow-hidden">
-                <span className="text-[10px] sm:text-xs font-mono uppercase block text-blue-100 truncate">Annual Return On Investment</span>
+                <span className="text-[10px] sm:text-xs font-mono uppercase block text-blue-100 break-words leading-tight">Annual Return On Investment</span>
                 <div className="flex flex-wrap items-baseline justify-between gap-1 mt-1">
-                  <span className="font-barlow font-black text-lg sm:text-3xl tracking-tight">
+                  <span className="font-barlow font-black text-base sm:text-3xl tracking-tight whitespace-nowrap">
                     ₹{(theftLeakageSaved * 12).toLocaleString('en-IN')}
                   </span>
                   <span className="text-[10px] sm:text-xs font-mono bg-blue-500/40 px-2 py-0.5 rounded flex-shrink-0">
