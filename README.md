@@ -36,7 +36,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/md0927/dikshi-technologies-smartpos.git
+git clone https://github.com/gokulavasanpk/dikshi-technologies-smartpos.git
 
 # Navigate to project directory
 cd dikshi-technologies-smartpos
