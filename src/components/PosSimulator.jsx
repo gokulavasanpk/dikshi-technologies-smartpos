@@ -5,6 +5,10 @@ import GooeyNav from './GooeyNav';
 const SAMPLE_ITEMS = [
   { id: 'DIK-SAR-01', name: 'Banarasi Kanjivaram Silk Saree', price: 4499, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-banarasi.jpg', tag: 'Pure Zari Silk' },
   { id: 'DIK-SAR-02', name: 'Chanderi Zari Handloom Saree', price: 3299, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-chanderi.jpg', tag: 'Handloom Silk' },
+  { id: 'DIK-SAR-03', name: 'Royal Gold Tissue Bridal Saree', price: 5499, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/luxury-silk-texture.png', tag: 'Bridal Tissue' },
+  { id: 'DIK-SAR-04', name: 'Kanjivaram Mulberry Silk Saree', price: 6299, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/golden-silk-texture.jpg', tag: 'Pure Mulberry' },
+  { id: 'DIK-SAR-05', name: 'Paithani Pure Silk Brocade', price: 4899, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-banarasi.jpg', tag: 'Peacock Pallu' },
+  { id: 'DIK-SAR-06', name: 'Tussar Hand-Painted Kalamkari Saree', price: 3799, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-chanderi.jpg', tag: 'Natural Dyes' },
   { id: 'DIK-CAP-01', name: 'Limited Edition Star Snapback Cap', price: 899, category: 'Accessories', size: 'Free Size', image: '/assets/one-standard-cap.png', tag: 'Embroidered Cotton' },
   { id: 'DIK-JWL-77', name: 'Golden Flame Sculptural Earrings', price: 1299, category: 'Fancy Ornaments', size: 'One Size', image: '/assets/one-standard-earrings.png', tag: 'Fluid 18K Gold' },
   { id: 'DIK-WTC-88', name: 'Tactical Matte Chronograph Watch', price: 3999, category: 'Accessories', size: 'Standard', image: '/assets/one-standard-watch.png', tag: 'Tactical Matte' },
@@ -200,7 +204,7 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
             </div>
 
             {/* 2. Interactive Screen Workspace - FIXED HEIGHT DESKTOP SCREEN */}
-            <div className="relative bg-slate-100 rounded-b-xl sm:rounded-b-2xl border border-slate-300/60 shadow-inner h-[395px] sm:h-[415px] lg:h-[425px] overflow-hidden flex flex-col justify-between">
+            <div className="relative bg-slate-100 rounded-b-xl sm:rounded-b-2xl border border-slate-300/60 shadow-inner h-[450px] sm:h-[475px] lg:h-[495px] overflow-hidden flex flex-col justify-between">
               
               {/* Internal Desktop Hint Bar for Small Screens (Visible only when viewport requires scrolling) */}
               <div className="lg:hidden bg-slate-200/90 border-b border-slate-300/80 px-2.5 py-1 text-[9.5px] font-mono text-slate-600 flex items-center justify-between flex-shrink-0 select-none">
@@ -215,7 +219,7 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
               {/* Internal Content Workspace (Scrollable on small layouts, fits seamlessly on desktop) */}
               <div className="w-full flex-1 overflow-auto lg:overflow-hidden pos-monitor-viewport">
                 {/* 2-Column POS Layout inside Desktop (Pinned desktop width & height on small screens, fluid on lg) */}
-                <div className="w-[740px] min-w-[740px] lg:w-full lg:min-w-0 min-h-[410px] lg:min-h-0 lg:h-full p-2.5 sm:p-3 flex flex-col justify-between">
+                <div className="w-[740px] min-w-[740px] lg:w-full lg:min-w-0 min-h-[450px] lg:min-h-0 lg:h-full p-2.5 sm:p-3 flex flex-col justify-between">
                   <div className="grid grid-cols-12 gap-2.5 sm:gap-3 items-stretch h-full">
                   
                   {/* Left Column: Product Catalog & Search (7 Cols) - FIXED HEIGHT, CLEAN DESKTOP VIEW */}
@@ -270,10 +274,10 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
                       ))}
                     </div>
 
-                    {/* Product Cards Grid: Exactly 6 Slots (2 Rows of 3) - FIXED HEIGHT, NEVER JUMPS */}
-                    <div className="grid grid-cols-3 grid-rows-2 gap-2 h-[200px] sm:h-[210px] overflow-hidden flex-shrink-0">
+                    {/* Product Cards Grid: Correct Proportional Card Sizing with Full Price & Add Button */}
+                    <div className="grid grid-cols-3 gap-2 sm:gap-2.5 h-[298px] sm:h-[304px] content-start overflow-hidden flex-shrink-0">
                     {currentItems.length === 0 ? (
-                      <div className="col-span-2 sm:col-span-3 row-span-2 flex flex-col items-center justify-center text-center p-4 bg-white/60 rounded-xl border border-dashed border-slate-300 text-slate-400 font-mono text-[10px]">
+                      <div className="col-span-3 h-[250px] flex flex-col items-center justify-center text-center p-4 bg-white/60 rounded-xl border border-dashed border-slate-300 text-slate-400 font-mono text-[10px]">
                         <span className="text-xl mb-1">🔍</span>
                         <span>No items match "{searchTerm}" in this category</span>
                         <button 
@@ -287,11 +291,11 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
                       currentItems.map((item) => (
                         <SpotlightCard
                           key={item.id}
-                          className="bg-white p-2 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between h-full"
+                          className="bg-white p-2 rounded-xl border border-slate-200/90 shadow-xs hover:shadow-md transition h-[144px] sm:h-[147px]"
                           spotlightColor="rgba(0, 120, 212, 0.12)"
                         >
-                          <div>
-                            <div className="w-full h-14 sm:h-16 rounded-lg bg-slate-100 mb-1 flex items-center justify-center overflow-hidden border border-slate-200/80">
+                          <div className="w-full">
+                            <div className="w-full h-[68px] sm:h-[70px] rounded-lg bg-slate-100 mb-1 flex items-center justify-center overflow-hidden border border-slate-200/80 flex-shrink-0">
                               <img 
                                 src={item.image} 
                                 alt={item.name} 
@@ -300,24 +304,21 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
                                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
                               />
                             </div>
-                            <span className="text-[8px] font-mono uppercase font-bold text-[#0078D4] block truncate">
+                            <span className="text-[7.5px] font-mono uppercase font-bold text-[#0078D4] block leading-none">
                               {item.category}
                             </span>
-                            <h4 className="font-bold text-[10px] sm:text-[11px] text-slate-900 line-clamp-2 break-words font-display leading-tight">
+                            <h4 className="font-bold text-[10.5px] sm:text-[11px] text-slate-900 line-clamp-1 break-words font-display leading-tight mt-0.5" title={item.name}>
                               {item.name}
                             </h4>
-                            <p className="text-[9px] font-mono text-slate-400 truncate">
-                              {item.id}
-                            </p>
                           </div>
 
-                          <div className="mt-1 pt-1 border-t border-slate-100 flex items-center justify-between">
-                            <span className="font-extrabold text-[11px] text-slate-900 font-display">
+                          <div className="mt-1 pt-1 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
+                            <span className="font-extrabold text-[11px] sm:text-xs text-slate-900 font-display">
                               ₹{item.price.toLocaleString('en-IN')}
                             </span>
                             <button
                               onClick={() => addItemToCart(item)}
-                              className="px-2 py-0.5 rounded-md bg-blue-50 hover:bg-[#0078D4] text-[#0078D4] hover:text-white text-[10px] font-bold transition cursor-pointer"
+                              className="px-2 py-0.5 rounded-md bg-blue-50 hover:bg-[#0078D4] text-[#0078D4] hover:text-white text-[9.5px] font-bold transition cursor-pointer shadow-2xs"
                             >
                               + Add
                             </button>
@@ -389,7 +390,7 @@ export default function PosSimulator({ cart = [], setCart, onShowToast }) {
                         No cloth items in cart.<br />Tap any product or scan barcode to add!
                       </div>
                     ) : (
-                      <div className="space-y-1 max-h-[110px] sm:max-h-[125px] overflow-y-auto pr-1 flex-1">
+                      <div className="space-y-1 max-h-[155px] sm:max-h-[185px] overflow-y-auto pr-1 flex-1">
                         {cart.map((item, idx) => (
                           <div key={`${item.id}-${idx}`} className="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 border border-slate-100 text-[10px]">
                             <div className="min-w-0 pr-1.5">

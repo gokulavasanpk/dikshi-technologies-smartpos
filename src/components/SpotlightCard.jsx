@@ -6,6 +6,7 @@ import React, { useRef, useState } from 'react';
 export default function SpotlightCard({
   children,
   className = "",
+  contentClassName = "flex flex-col justify-between h-full w-full",
   spotlightColor = "rgba(4, 86, 221, 0.18)",
   spotlightSize = 300
 }) {
@@ -42,7 +43,7 @@ export default function SpotlightCard({
           background: `radial-gradient(circle ${spotlightSize}px at ${pos.x}px ${pos.y}px, ${spotlightColor}, transparent 80%)`
         }}
       />
-      <div className="relative z-20 h-full w-full">
+      <div className={`relative z-20 ${contentClassName}`}>
         {children}
       </div>
     </div>
