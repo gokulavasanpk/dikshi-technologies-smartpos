@@ -502,13 +502,13 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
                   e.stopPropagation();
                   selectByKey(prod.key);
                 }}
-                className={`absolute top-0 left-0 flex flex-col bg-white pointer-events-auto transition-colors duration-200 shadow-sm rounded-lg overflow-hidden ${
-                  isActive ? '!border-2 !border-[#0456DD] !shadow-md' : 'border border-[rgba(13,13,13,0.12)]'
+                className={`absolute top-0 left-0 flex flex-col pointer-events-auto transition-all duration-300 cursor-pointer ${
+                  isActive ? 'scale-110 z-20' : 'hover:scale-105 opacity-90 hover:opacity-100'
                 }`}
                 style={{
                   width: 'clamp(82px, 11.4vw, 168px)',
                   height: 'calc(clamp(82px, 11.4vw, 168px) * 1.09)',
-                  padding: 'clamp(6px, 1vw, 14px)',
+                  padding: 'clamp(4px, 0.8vw, 8px)',
                   willChange: 'transform'
                 }}
               >
@@ -516,11 +516,17 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
                   <img
                     src={prod.thumb}
                     alt={prod.label}
-                    className="w-full h-full object-contain pointer-events-none"
+                    className={`w-full h-full object-contain pointer-events-none transition-all duration-300 ${
+                      isActive
+                        ? 'drop-shadow-[0_8px_16px_rgba(4,86,221,0.3)] brightness-105'
+                        : 'drop-shadow-[0_4px_10px_rgba(0,0,0,0.1)]'
+                    }`}
                     loading="eager"
                   />
                 </div>
-                <p className="mt-1 text-center flex-shrink-0 whitespace-nowrap overflow-hidden text-ellipsis w-full px-0.5 font-mono font-medium text-[clamp(9px,0.85vw,13px)] text-[#0D0D0D]">
+                <p className={`mt-1 text-center flex-shrink-0 whitespace-nowrap overflow-hidden text-ellipsis w-full px-0.5 font-mono text-[clamp(9px,0.85vw,13px)] transition-colors duration-200 ${
+                  isActive ? 'font-bold text-[#0456DD]' : 'font-medium text-slate-700'
+                }`}>
                   {prod.label}
                 </p>
               </div>
@@ -533,8 +539,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
           className="absolute left-1/2 bottom-0 -translate-x-1/2 pointer-events-none flex items-end justify-center"
           style={{
             height: '98%',
-            width: 'auto',
-            aspectRatio: activeKey ? '5452 / 5136' : '1333 / 2000',
+            width: 'clamp(240px, 36vw, 480px)',
             zIndex: 35
           }}
         >
