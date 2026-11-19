@@ -126,20 +126,26 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     });
   }, []);
 
-  // Responsive card count calculation and metric caching
+  // Responsive card count calculation and metric caching with guaranteed anti-collision spacing
   useEffect(() => {
     const handleResize = () => {
       if (!stageRef.current) return;
       const winW = window.innerWidth;
       const cardW = calcCardWidth(winW);
-      const cardGap = cardW + Math.min(Math.max(16, 0.016 * winW), 32);
+      // Ensure generous gap between cards so they never collide or bunch up
+      const minGap = Math.max(28, Math.round(cardW * 0.38));
       const clientW = stageRef.current.clientWidth || winW;
       const clientH = stageRef.current.clientHeight || 480;
-      const trackW = clientW + 2 * cardW;
-      const needed = Math.ceil((clientW + 2 * cardW) / cardGap);
-      const count = winW < 640
-        ? PRODUCTS.length
-        : Math.max(PRODUCTS.length * 2, Math.ceil(needed / PRODUCTS.length) * PRODUCTS.length);
+
+      // Calculate how many cards needed to cover the track seamlessly
+      const neededCards = Math.ceil((clientW + cardW * 2) / (cardW + minGap));
+      const sets = Math.max(2, Math.ceil(neededCards / PRODUCTS.length));
+      const count = sets * PRODUCTS.length;
+
+      const stepDistance = (clientW + cardW * 2) / count;
+      const spacing = Math.max(cardW + minGap, stepDistance);
+      const trackW = count * spacing;
+
       setTotalCards(count);
 
       layoutMetricsRef.current = {
@@ -148,7 +154,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         clientW,
         clientH,
         trackW,
-        spacing: trackW / count
+        spacing
       };
     };
 
@@ -175,25 +181,24 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
 
       const { cardW, clientW, clientH, trackW, spacing } = layoutMetricsRef.current;
 
-      // 1. Smooth Glide to Selected Target Card (Exponential Spring Damping)
+      // 1. Smooth Selection: Always advance FORWARD in the Right-to-Left flow to reach the target card
       if (isTargetingRef.current && targetOffsetRef.current !== null) {
         let diff = (targetOffsetRef.current - scrollOffsetRef.current) % trackW;
-        if (diff > trackW / 2) diff -= trackW;
-        if (diff < -trackW / 2) diff += trackW;
+        if (diff < 0) diff += trackW; // Always move forward in the natural Right-to-Left flow
 
-        if (Math.abs(diff) < 0.6) {
+        if (Math.abs(diff) < 0.8) {
           scrollOffsetRef.current = targetOffsetRef.current;
           isTargetingRef.current = false;
           targetOffsetRef.current = null;
         } else {
           // Smooth deceleration glide factor
-          const factor = Math.min(1, dt * 9.5);
+          const factor = Math.min(1, dt * 7.5);
           scrollOffsetRef.current = (scrollOffsetRef.current + diff * factor) % trackW;
           if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
         }
       } else if (!isDraggingRef.current && isPlaying && now > holdUntilRef.current) {
-        // 2. Normal Continuous Conveyor Scroll
-        const step = dt * (cardW / 2.9) * speedMultiplier * scrollDir;
+        // 2. Normal Continuous Conveyor Scroll: Smoothly flowing Right-to-Left into the model
+        const step = dt * (cardW / 2.8) * speedMultiplier * scrollDir;
         scrollOffsetRef.current = (scrollOffsetRef.current + step) % trackW;
         if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
       } else if (!isDraggingRef.current && Math.abs(dragVelocityRef.current) > 0.4) {
@@ -204,7 +209,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
       }
 
       // Exact Switchblade trigger line (viewer's right, next to model)
-      const centerTarget = clientW / 2 + 0.9 * cardW;
+      const centerTarget = clientW / 2 + 0.85 * cardW;
       let closestIdx = -1;
       let minDistance = Infinity;
 
@@ -216,8 +221,12 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         if (x < 0) x += trackW;
         x -= cardW;
 
-        // Mathematical U-curve
-        const y = 0.03 * clientH + 0.55 * clientH * (0.5 - 0.5 * Math.cos((x / (1.2 * clientW)) * Math.PI * 2));
+        // Perfectly symmetrical Cosine U-curve across the stage width
+        const progress = (x + cardW / 2) / clientW;
+        const clampedProg = Math.max(-0.2, Math.min(1.2, progress));
+        const normalizedY = 0.5 - 0.5 * Math.cos(clampedProg * Math.PI * 2);
+        const y = 0.04 * clientH + 0.52 * clientH * normalizedY;
+
         cardEl.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
 
         // Keep cards behind the central model (z: 1 to 20)
@@ -326,7 +335,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     isDraggingRef.current = false;
   };
 
-  // Smooth Selection: Glides conveyor to target card and holds view cleanly
+  // Smooth Selection: Glides conveyor FORWARD to target card and holds view cleanly
   const selectByKey = (key) => {
     if (key === 'reset') {
       setActiveIdx(-1);
@@ -340,11 +349,11 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     }
 
     const { cardW, clientW, trackW, spacing } = layoutMetricsRef.current;
-    const centerTarget = clientW / 2 + 0.9 * cardW;
+    const centerTarget = clientW / 2 + 0.85 * cardW;
 
-    // Find closest instance of this product on the continuous ring
+    // Find the next upcoming instance of this product ahead in the Right-to-Left conveyor flow
     let bestIdx = -1;
-    let shortestDist = Infinity;
+    let shortestForwardDist = Infinity;
     let bestNewOffset = 0;
 
     for (let i = 0; i < totalCards; i++) {
@@ -352,13 +361,12 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         let candidateOffset = (i * spacing - (centerTarget + cardW / 2)) % trackW;
         if (candidateOffset < 0) candidateOffset += trackW;
 
-        let diff = (candidateOffset - scrollOffsetRef.current) % trackW;
-        if (diff > trackW / 2) diff -= trackW;
-        if (diff < -trackW / 2) diff += trackW;
+        // Ensure we always travel forward in the Right-to-Left flow
+        let forwardDiff = (candidateOffset - scrollOffsetRef.current) % trackW;
+        if (forwardDiff < 0) forwardDiff += trackW;
 
-        const absDist = Math.abs(diff);
-        if (absDist < shortestDist) {
-          shortestDist = absDist;
+        if (forwardDiff < shortestForwardDist) {
+          shortestForwardDist = forwardDiff;
           bestIdx = i;
           bestNewOffset = candidateOffset;
         }

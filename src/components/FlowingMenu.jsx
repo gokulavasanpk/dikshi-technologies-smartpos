@@ -26,7 +26,7 @@ export default function FlowingMenu({
           </p>
         </div>
 
-        <div className="border-t border-slate-200 divide-y divide-slate-100">
+        <div className="flex flex-col gap-1 sm:gap-2">
           {items.map((item, index) => {
             const isHovered = hoveredIdx === index;
             return (
@@ -35,7 +35,7 @@ export default function FlowingMenu({
                 href={item.link}
                 onMouseEnter={() => setHoveredIdx(index)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                className="group relative flex items-center justify-between py-3.5 sm:py-5 px-2.5 sm:px-6 transition-all duration-300 hover:bg-slate-50/80 overflow-hidden"
+                className="group relative flex items-center justify-between py-3.5 sm:py-5 px-3 sm:px-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:bg-slate-50/90 overflow-hidden"
               >
                 <div className="flex items-center gap-3 sm:gap-6 min-w-0 z-10 flex-1">
                   <span className="font-mono text-xs sm:text-sm font-bold text-slate-400 group-hover:text-[#0456DD] transition-colors flex-shrink-0">

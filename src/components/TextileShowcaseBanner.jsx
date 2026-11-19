@@ -147,10 +147,10 @@ export default function TextileShowcaseBanner() {
             {/* LEFT COLUMN: 3D CircularCarousel Container                          */}
             {/* ------------------------------------------------------------------- */}
             <div className="lg:col-span-6 w-full flex flex-col items-center justify-center">
-              <div className="w-full bg-white rounded-xl sm:rounded-[28px] border border-slate-200/80 shadow-sm p-2 sm:p-4 lg:p-5 relative overflow-hidden flex flex-col items-center">
+              <div className="w-full bg-white rounded-xl sm:rounded-[28px] border border-slate-200/80 shadow-sm p-1 sm:p-4 lg:p-5 relative overflow-hidden flex flex-col items-center">
                 
-                {/* 3D Circular Carousel Frame - TIGHT DYNAMIC HEIGHT, NO DEAD WHITE SPACE */}
-                <div className="w-full h-[260px] xs:h-[300px] sm:h-[420px] lg:h-[520px] relative">
+                {/* 3D Circular Carousel Frame - TIGHT DYNAMIC HEIGHT, ZERO DEAD WHITE SPACE */}
+                <div className="w-full h-[195px] xs:h-[220px] sm:h-[380px] lg:h-[500px] relative">
                   <CircularCarousel
                     ref={carouselRef}
                     items={CAROUSEL_ITEMS}
@@ -158,7 +158,7 @@ export default function TextileShowcaseBanner() {
                     intro="rise"
                     cardWidth={270}
                     aspectRatio={0.78}
-                    scale={1.38}
+                    scale={1.42}
                     gap={20}
                     speed={12}
                     curve={0.92}
@@ -179,7 +179,7 @@ export default function TextileShowcaseBanner() {
                 </div>
 
                 {/* Subtle Interactive Instruction */}
-                <div className="mt-1.5 sm:mt-2 pb-0.5 sm:pb-1 text-center">
+                <div className="mt-1 sm:mt-2 pb-0.5 sm:pb-1 text-center">
                   <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
                     Drag, flick or click card to rotate 3D ring
                   </span>
