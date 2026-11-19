@@ -10,7 +10,7 @@ const PRODUCTS = [
     desc: 'Premium Embroidered Star Cotton Snapback Cap',
     stock: 48,
     thumb: '/assets/one-standard-cap.png',
-    worn: '/assets/cap3.png'
+    worn: '/assets/cap3.webp'
   },
   {
     key: 'headphones2',
@@ -21,7 +21,7 @@ const PRODUCTS = [
     desc: 'Studio Wireless Metallic Sound Over-Ear Headphones',
     stock: 22,
     thumb: '/assets/one-standard-headphones2.png',
-    worn: '/assets/headphones3.png'
+    worn: '/assets/headphones3.webp'
   },
   {
     key: 'earrings',
@@ -32,7 +32,7 @@ const PRODUCTS = [
     desc: 'Handcrafted Golden Flame Fluid Sculptural Earrings',
     stock: 65,
     thumb: '/assets/one-standard-earrings.png',
-    worn: '/assets/earrings3.png'
+    worn: '/assets/earrings3.webp'
   },
   {
     key: 'sunglasses',
@@ -43,7 +43,7 @@ const PRODUCTS = [
     desc: 'Futuristic Dark Shield UV400 Cyber Shades',
     stock: 31,
     thumb: '/assets/one-standard-sunglasses.png',
-    worn: '/assets/sunglasses3.png'
+    worn: '/assets/sunglasses3.webp'
   },
   {
     key: 'watch',
@@ -54,7 +54,7 @@ const PRODUCTS = [
     desc: 'Desert Sand Matte Tactical Chronograph Watch',
     stock: 19,
     thumb: '/assets/one-standard-watch.png',
-    worn: '/assets/watch3.png'
+    worn: '/assets/watch3.webp'
   },
   {
     key: 'bag',
@@ -65,11 +65,11 @@ const PRODUCTS = [
     desc: 'Ochre Suede Grommet Hobo Shoulder Carryall',
     stock: 14,
     thumb: '/assets/one-standard-bag.png',
-    worn: '/assets/bag3.png'
+    worn: '/assets/bag3.webp'
   }
 ];
 
-const BASE_MODEL = '/assets/model-base.png';
+const BASE_MODEL = '/assets/model-base.webp';
 
 const calcCardWidth = (w) => {
   if (w < 480) {
@@ -87,18 +87,16 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
   const [activeIdx, setActiveIdx] = useState(-1);
   const [activeKey, setActiveKey] = useState(null);
 
-  // Model crossfade states
-  const [currentModel, setCurrentModel] = useState(BASE_MODEL);
-  const [incomingModel, setIncomingModel] = useState(null);
-  const [incomingVisible, setIncomingVisible] = useState(false);
-
   // Playback & Interaction
   const [isPlaying, setIsPlaying] = useState(true);
   const [speedMultiplier, setSpeedMultiplier] = useState(1);
   const [scrollDir, setScrollDir] = useState(1); // 1 = right-to-left (Switchblade natural flow)
 
-  // Scroll offset ref for continuous requestAnimationFrame
+  // Smooth Motion Refs for Continuous 60fps/120fps RAF
   const scrollOffsetRef = useRef(0);
+  const targetOffsetRef = useRef(null);
+  const isTargetingRef = useRef(false);
+  const holdUntilRef = useRef(0);
   const isDraggingRef = useRef(false);
   const startDragXRef = useRef(0);
   const startOffsetRef = useRef(0);
@@ -107,7 +105,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
   const lastDragXRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
   const activeIdxRef = useRef(-1);
-  const currentModelRef = useRef(BASE_MODEL);
+  const activeKeyRef = useRef(null);
   const isVisibleRef = useRef(true);
 
   // Cached layout metrics to eliminate forced layout calculation inside RAF
@@ -120,7 +118,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     spacing: 140
   });
 
-  // Preload images into browser memory
+  // Preload images into browser memory cache
   useEffect(() => {
     [BASE_MODEL, ...PRODUCTS.map(p => p.thumb), ...PRODUCTS.map(p => p.worn)].forEach(src => {
       const img = new Image();
@@ -159,26 +157,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Dynamic crossfader effect
-  const crossfadeTo = (targetSrc) => {
-    if (targetSrc === currentModelRef.current) return;
-    currentModelRef.current = targetSrc;
-
-    setIncomingModel(targetSrc);
-    setIncomingVisible(false);
-
-    requestAnimationFrame(() => {
-      setIncomingVisible(true);
-    });
-
-    setTimeout(() => {
-      setCurrentModel(targetSrc);
-      setIncomingModel(null);
-      setIncomingVisible(false);
-    }, 250);
-  };
-
-  // High-Performance Switchblade animation loop with IntersectionObserver
+  // Ultra-Smooth Switchblade animation loop with zero layout thrashing
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
@@ -191,16 +170,34 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         return;
       }
 
-      const dt = Math.min((now - lastTimeRef.current) / 1000, 0.1);
+      const dt = Math.min((now - lastTimeRef.current) / 1000, 0.06);
       lastTimeRef.current = now;
 
       const { cardW, clientW, clientH, trackW, spacing } = layoutMetricsRef.current;
 
-      if (!isDraggingRef.current && isPlaying) {
+      // 1. Smooth Glide to Selected Target Card (Exponential Spring Damping)
+      if (isTargetingRef.current && targetOffsetRef.current !== null) {
+        let diff = (targetOffsetRef.current - scrollOffsetRef.current) % trackW;
+        if (diff > trackW / 2) diff -= trackW;
+        if (diff < -trackW / 2) diff += trackW;
+
+        if (Math.abs(diff) < 0.6) {
+          scrollOffsetRef.current = targetOffsetRef.current;
+          isTargetingRef.current = false;
+          targetOffsetRef.current = null;
+        } else {
+          // Smooth deceleration glide factor
+          const factor = Math.min(1, dt * 9.5);
+          scrollOffsetRef.current = (scrollOffsetRef.current + diff * factor) % trackW;
+          if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
+        }
+      } else if (!isDraggingRef.current && isPlaying && now > holdUntilRef.current) {
+        // 2. Normal Continuous Conveyor Scroll
         const step = dt * (cardW / 2.9) * speedMultiplier * scrollDir;
         scrollOffsetRef.current = (scrollOffsetRef.current + step) % trackW;
         if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
       } else if (!isDraggingRef.current && Math.abs(dragVelocityRef.current) > 0.4) {
+        // 3. Momentum Inertia after User Drag
         scrollOffsetRef.current = (scrollOffsetRef.current - dragVelocityRef.current * dt * 60) % trackW;
         if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
         dragVelocityRef.current *= 0.91;
@@ -234,22 +231,28 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         }
       }
 
-      // Proximity check: activate or go neutral
-      const activationProximity = cardW * 0.9;
-      if (minDistance <= activationProximity) {
-        if (closestIdx !== -1 && closestIdx !== activeIdxRef.current) {
-          activeIdxRef.current = closestIdx;
-          setActiveIdx(closestIdx);
-          const prod = PRODUCTS[closestIdx % PRODUCTS.length];
-          setActiveKey(prod.key);
-          crossfadeTo(prod.worn);
-        }
-      } else {
-        if (activeIdxRef.current !== -1) {
-          activeIdxRef.current = -1;
-          setActiveIdx(-1);
-          setActiveKey(null);
-          crossfadeTo(BASE_MODEL);
+      // Proximity check: activate during natural scrolling when not actively targeting
+      if (!isTargetingRef.current && now > holdUntilRef.current) {
+        const activationProximity = cardW * 0.9;
+        if (minDistance <= activationProximity) {
+          if (closestIdx !== -1 && closestIdx !== activeIdxRef.current) {
+            activeIdxRef.current = closestIdx;
+            setActiveIdx(closestIdx);
+            const prod = PRODUCTS[closestIdx % PRODUCTS.length];
+            if (activeKeyRef.current !== prod.key) {
+              activeKeyRef.current = prod.key;
+              setActiveKey(prod.key);
+            }
+          }
+        } else {
+          if (activeIdxRef.current !== -1) {
+            activeIdxRef.current = -1;
+            setActiveIdx(-1);
+            if (activeKeyRef.current !== null) {
+              activeKeyRef.current = null;
+              setActiveKey(null);
+            }
+          }
         }
       }
 
@@ -283,10 +286,13 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     };
   }, [totalCards, isPlaying, speedMultiplier, scrollDir]);
 
-  // Pointer drag listeners
+  // Pointer drag listeners with momentum release
   const handlePointerDown = (e) => {
     if (e.target.closest('button')) return;
     isDraggingRef.current = true;
+    isTargetingRef.current = false;
+    targetOffsetRef.current = null;
+    holdUntilRef.current = 0;
     startDragXRef.current = e.clientX || (e.touches && e.touches[0].clientX) || 0;
     lastDragXRef.current = startDragXRef.current;
     lastDragTimeRef.current = performance.now();
@@ -320,41 +326,54 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     isDraggingRef.current = false;
   };
 
+  // Smooth Selection: Glides conveyor to target card and holds view cleanly
   const selectByKey = (key) => {
     if (key === 'reset') {
       setActiveIdx(-1);
       setActiveKey(null);
-      crossfadeTo(BASE_MODEL);
+      activeIdxRef.current = -1;
+      activeKeyRef.current = null;
+      isTargetingRef.current = false;
+      targetOffsetRef.current = null;
+      holdUntilRef.current = 0;
       return;
     }
 
-    const winW = window.innerWidth;
-    const cardW = calcCardWidth(winW);
-    const clientW = stageRef.current ? stageRef.current.clientWidth : winW;
-    const trackW = clientW + 2 * cardW;
-    const spacing = trackW / totalCards;
-    
-    // Exact Switchblade trigger line
+    const { cardW, clientW, trackW, spacing } = layoutMetricsRef.current;
     const centerTarget = clientW / 2 + 0.9 * cardW;
 
-    let targetIdx = -1;
+    // Find closest instance of this product on the continuous ring
+    let bestIdx = -1;
+    let shortestDist = Infinity;
+    let bestNewOffset = 0;
+
     for (let i = 0; i < totalCards; i++) {
       if (PRODUCTS[i % PRODUCTS.length].key === key) {
-        targetIdx = i;
-        break;
+        let candidateOffset = (i * spacing - (centerTarget + cardW / 2)) % trackW;
+        if (candidateOffset < 0) candidateOffset += trackW;
+
+        let diff = (candidateOffset - scrollOffsetRef.current) % trackW;
+        if (diff > trackW / 2) diff -= trackW;
+        if (diff < -trackW / 2) diff += trackW;
+
+        const absDist = Math.abs(diff);
+        if (absDist < shortestDist) {
+          shortestDist = absDist;
+          bestIdx = i;
+          bestNewOffset = candidateOffset;
+        }
       }
     }
 
-    if (targetIdx !== -1) {
-      // Exactly align center of target card (i_pos + cardW/2) with centerTarget:
-      let newOffset = (targetIdx * spacing - (centerTarget + cardW / 2)) % trackW;
-      if (newOffset < 0) newOffset += trackW;
+    if (bestIdx !== -1) {
+      targetOffsetRef.current = bestNewOffset;
+      isTargetingRef.current = true;
+      holdUntilRef.current = performance.now() + 2500;
       
-      scrollOffsetRef.current = newOffset;
-      setActiveIdx(targetIdx);
-      const prod = PRODUCTS[targetIdx % PRODUCTS.length];
-      setActiveKey(prod.key);
-      crossfadeTo(prod.worn);
+      setActiveIdx(bestIdx);
+      activeIdxRef.current = bestIdx;
+      setActiveKey(key);
+      activeKeyRef.current = key;
     }
   };
 
@@ -511,30 +530,36 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
 
         {/* Central Fashion Model - Elevated in front & standing tall */}
         <div
-          className="absolute left-1/2 bottom-0 -translate-x-1/2 pointer-events-none flex items-end justify-center transition-[aspect-ratio] duration-250 ease-out"
+          className="absolute left-1/2 bottom-0 -translate-x-1/2 pointer-events-none flex items-end justify-center"
           style={{
             height: '98%',
+            width: 'auto',
             aspectRatio: activeKey ? '5452 / 5136' : '1333 / 2000',
             zIndex: 35
           }}
         >
-          {/* Base / Current Outfit */}
+          {/* Base Model Outfit */}
           <img
-            src={currentModel}
-            alt="Dikshi Model"
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain pointer-events-none"
-            style={{ opacity: 1 }}
+            src={BASE_MODEL}
+            alt="Dikshi Model Base"
+            className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain pointer-events-none transition-opacity duration-300 ease-in-out ${
+              !activeKey ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            }`}
+            style={{ willChange: 'opacity' }}
           />
 
-          {/* Incoming Crossfading Outfit */}
-          {incomingModel && (
+          {/* All 6 Equipped Outfits Pre-Mounted for 0ms Zero-Stutter Instant Crossfade */}
+          {PRODUCTS.map((prod) => (
             <img
-              src={incomingModel}
-              alt="Dikshi Model Incoming"
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain pointer-events-none transition-opacity duration-250 ease-out"
-              style={{ opacity: incomingVisible ? 1 : 0 }}
+              key={prod.key}
+              src={prod.worn}
+              alt={prod.label}
+              className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain pointer-events-none transition-opacity duration-300 ease-in-out ${
+                activeKey === prod.key ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              }`}
+              style={{ willChange: 'opacity' }}
             />
-          )}
+          ))}
         </div>
       </div>
 
