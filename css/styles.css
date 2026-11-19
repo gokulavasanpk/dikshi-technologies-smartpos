@@ -1,0 +1,540 @@
+/* Dikshi Technologies - Fully Fluid Grid & Flex Architecture */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --font-barlow: 'Barlow', sans-serif;
+  --font-archivo: 'Archivo', sans-serif;
+  --font-ibm-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  --primary-blue: #0456DD;
+  --primary-blue-hover: #0344b0;
+  --primary-blue-light: #EBF2FF;
+  --primary-dark: #0D0D0D;
+  --dark-subtle: #1e293b;
+  --gray-card: #f8fafc;
+  --border-light: rgba(13, 13, 13, 0.12);
+  --border-active: #0456DD;
+  --accent-emerald: #10B981;
+  --accent-amber: #F59E0B;
+
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.35s var(--ease-smooth);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  color: var(--primary-dark);
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Typography Helpers */
+.font-barlow { font-family: var(--font-barlow); }
+.font-archivo { font-family: var(--font-archivo); }
+.font-mono { font-family: var(--font-ibm-mono); }
+.font-sans { font-family: var(--font-sans); }
+
+/* Word Break & Overflow Protection */
+p, span, h1, h2, h3, h4, h5, h6, a, label, button {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ========================================================================== */
+/* FLUID VIEWPORT CONTAINER - NO RIGID FIXED LAYOUT                           */
+/* ========================================================================== */
+#preview-viewport-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  transition: max-width 0.45s var(--ease-smooth), box-shadow 0.3s ease;
+  background: #ffffff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+#preview-viewport-container.simulating-device {
+  box-shadow: 0 10px 40px -10px rgba(4, 86, 221, 0.2), 0 0 0 1px rgba(4, 86, 221, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+/* Device Inspector / Tester Top Bar */
+#device-tester-bar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: rgba(13, 13, 13, 0.94);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.device-btn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-ibm-mono);
+  font-weight: 500;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: var(--transition-smooth);
+  user-select: none;
+  white-space: nowrap;
+}
+.device-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+.device-btn.active {
+  background: var(--primary-blue);
+  color: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 12px rgba(4, 86, 221, 0.5);
+}
+
+/* Range Slider for Fluid Width Testing */
+.fluid-slider-thumb {
+  accent-color: var(--primary-blue);
+  cursor: pointer;
+  height: 6px;
+  border-radius: 4px;
+  background: #334155;
+}
+
+/* ========================================================================== */
+/* LOOKBOOK: FLUID & MATHEMATICAL COSINE U-CURVE CAROUSEL                     */
+/* ========================================================================== */
+.lookbook-section {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  padding: clamp(48px, 6vw, 96px) 0 24px;
+  border-bottom: 1px solid rgba(13, 13, 13, 0.08);
+  user-select: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+.lookbook-title {
+  text-align: center;
+  font-family: var(--font-barlow);
+  font-weight: 800;
+  font-size: clamp(26px, 4.5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #0D0D0D;
+}
+
+.lookbook-stage {
+  position: relative;
+  height: clamp(430px, 50vw, 660px);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  cursor: grab;
+  transition: height 0.4s var(--ease-smooth);
+}
+.lookbook-stage:active {
+  cursor: grabbing;
+}
+
+/* Floating Product Cards - Authentic Switchblade Editorial Style */
+.lookbook-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid rgba(13, 13, 13, 0.12);
+  border-radius: 0px;
+  padding: clamp(9px, 1vw, 14px);
+  transition: border-color 0.2s ease, transform 0.1s linear;
+  will-change: transform;
+  box-shadow: none;
+}
+
+.lookbook-card:hover {
+  border-color: rgba(4, 86, 221, 0.7);
+}
+
+.lookbook-card.active {
+  border: 2px solid #0456DD !important;
+  box-shadow: none;
+}
+
+.lookbook-card-img-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.lookbook-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.lookbook-card:hover img {
+  transform: scale(1.03);
+}
+
+.lookbook-card-label {
+  margin-top: clamp(5px, 0.6vw, 9px);
+  text-align: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: var(--font-ibm-mono);
+  font-weight: 500;
+  font-size: clamp(9px, 0.85vw, 13px);
+  color: #0D0D0D;
+}
+
+.lookbook-card.active .lookbook-card-label {
+  color: #0D0D0D;
+  font-weight: 600;
+}
+
+/* Central Model Container - Height 108% & Dynamic Aspect Ratio matching Switchblade */
+.lookbook-model-wrapper {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  height: 108%;
+  aspect-ratio: 5452 / 5136;
+  transition: aspect-ratio 0.25s ease-out;
+  z-index: 500;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.lookbook-model-img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.lookbook-model-img.current {
+  opacity: 1;
+  z-index: 1;
+}
+
+.lookbook-model-img.incoming {
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 250ms ease-out;
+}
+.lookbook-model-img.incoming.visible {
+  opacity: 1;
+}
+
+/* Pulsing Active Indicator Dot */
+.pulsing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary-blue);
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+.pulsing-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-blue);
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ========================================================================== */
+/* FLUID BUTTONS & MICRO-INTERACTIONS (Never Overflow, Always Fluid)         */
+/* ========================================================================== */
+.btn-dikshi-primary {
+  background: var(--primary-blue);
+  color: #ffffff;
+  font-family: var(--font-archivo);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 20px;
+  min-height: 44px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 14px rgba(4, 86, 221, 0.28);
+  text-decoration: none;
+  max-width: 100%;
+  text-align: center;
+}
+.btn-dikshi-primary:hover {
+  background: var(--primary-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(4, 86, 221, 0.42);
+}
+.btn-dikshi-primary:active {
+  transform: translateY(0);
+}
+
+.btn-dikshi-dark {
+  background: #0D0D0D;
+  color: #ffffff;
+  font-family: var(--font-archivo);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 20px;
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  text-decoration: none;
+  max-width: 100%;
+  text-align: center;
+}
+.btn-dikshi-dark:hover {
+  background: #1f2937;
+  transform: translateY(-2px);
+}
+.btn-dikshi-dark:active {
+  transform: translateY(0);
+}
+
+.btn-dikshi-outline {
+  background: transparent;
+  color: #0D0D0D;
+  font-family: var(--font-archivo);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 20px;
+  min-height: 44px;
+  border: 1px solid rgba(13, 13, 13, 0.2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  text-decoration: none;
+  max-width: 100%;
+  text-align: center;
+}
+.btn-dikshi-outline:hover {
+  border-color: #0D0D0D;
+  background: rgba(13, 13, 13, 0.05);
+  transform: translateY(-2px);
+}
+.btn-dikshi-outline:active {
+  transform: translateY(0);
+}
+
+/* ========================================================================== */
+/* POS TERMINAL SIMULATION - 100% FLUID GRID & FLEX LAYOUT                    */
+/* ========================================================================== */
+.pos-screen {
+  background: #0f172a;
+  border-radius: 16px;
+  border: 1px solid #334155;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  color: #f8fafc;
+  width: 100%;
+  transition: var(--transition-smooth);
+}
+
+.pos-catalog-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  min-width: 0;
+}
+.pos-catalog-card:hover {
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(4, 86, 221, 0.25);
+}
+
+.pos-cart-panel {
+  background: #141f36;
+  border-top: 1px solid #334155;
+  transition: var(--transition-smooth);
+}
+@media (min-width: 1024px) {
+  .pos-cart-panel {
+    border-top: none;
+    border-left: 1px solid #334155;
+  }
+}
+
+/* Thermal Receipt Styling */
+.thermal-receipt {
+  background: #fdfdfd;
+  color: #111827;
+  font-family: var(--font-ibm-mono);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px dashed #cbd5e1;
+  position: relative;
+  width: 100%;
+}
+.thermal-receipt::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: radial-gradient(circle, transparent, transparent 50%, #fdfdfd 50%, #fdfdfd 100%);
+  background-size: 16px 16px;
+}
+
+/* Size Chips */
+.size-chip {
+  padding: 3px 8px;
+  font-size: 11px;
+  font-family: var(--font-ibm-mono);
+  border-radius: 4px;
+  border: 1px solid #475569;
+  background: #1e293b;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  user-select: none;
+}
+.size-chip:hover, .size-chip.selected {
+  border-color: #38bdf8;
+  background: #0284c7;
+  color: #ffffff;
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: calc(100vw - 48px);
+}
+.dikshi-toast {
+  pointer-events: auto;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #38bdf8;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slide-in 0.35s var(--ease-smooth);
+  max-width: 360px;
+  transition: var(--transition-smooth);
+}
+@keyframes slide-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Touch Target Inspector Overlay */
+body.inspect-touch-targets button,
+body.inspect-touch-targets a,
+body.inspect-touch-targets input,
+body.inspect-touch-targets select {
+  outline: 2px dashed #f59e0b !important;
+  outline-offset: 2px !important;
+}
+
+/* Responsive Media Adjustments */
+@media (max-width: 640px) {
+  .lookbook-stage {
+    height: clamp(300px, 75vw, 400px);
+  }
+  .lookbook-model-wrapper {
+    height: 98%;
+    max-width: 95vw;
+  }
+}

@@ -1,0 +1,215 @@
+/* React Bits Pro - Scaled Receipt Printer Styles (@reactbits-starter/receipt-printer-tw) */
+.receipt-printer-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  user-select: none;
+  width: 100%;
+  max-width: 360px;
+}
+
+/* Ground reflection shadow beneath the printer chassis base */
+.receipt-printer-root::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; /* Positioned directly under the chassis base */
+  width: 290px;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.24) 0%, transparent 72%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Paper Feed Stage - Masks the paper so it emerges upwards from inside the slot */
+.receipt-feed-stage {
+  position: relative;
+  width: 296px;
+  height: 380px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 10;
+}
+
+/* While tearing, allow overflow visible so the ripped bottom zigzag is 100% visible */
+.receipt-feed-stage--tearing {
+  overflow: visible !important;
+}
+
+/* 3D WebGL PaperCrumple Arena Stage */
+.receipt-crumple-stage {
+  position: relative;
+  width: 310px;
+  height: 420px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 60;
+  touch-action: none;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+.receipt-paper-crumple-instance {
+  width: 100%;
+  height: 100%;
+  overflow: visible !important;
+}
+
+/* Shadow Wrapper: allows drop-shadow to trace the exact clip-path zigzag teeth */
+.receipt-paper-shadow-wrapper {
+  will-change: transform, opacity;
+  transform-origin: center bottom;
+  /* Tactile mechanical stepping transition when motor advances */
+  transition: transform 0.085s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+  filter: 
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06))
+    drop-shadow(0 14px 28px rgba(15, 23, 42, 0.12));
+}
+
+/* The thermal paper card with BOTH top and bottom sharp zigzag cuts */
+.receipt-paper-body {
+  width: 280px;
+  background-color: #ffffff;
+  color: #121316;
+  position: relative;
+  /* Top AND Bottom Authentic Thermal Cutter Zigzag Teeth */
+  clip-path: polygon(
+    /* Top Zigzag Peaks & Valleys (20 sharp teeth) */
+    0% 8px, 2.5% 0px, 5% 8px, 7.5% 0px, 10% 8px, 12.5% 0px, 15% 8px, 17.5% 0px, 20% 8px, 22.5% 0px,
+    25% 8px, 27.5% 0px, 30% 8px, 32.5% 0px, 35% 8px, 37.5% 0px, 40% 8px, 42.5% 0px, 45% 8px, 47.5% 0px,
+    50% 8px, 52.5% 0px, 55% 8px, 57.5% 0px, 60% 8px, 62.5% 0px, 65% 8px, 67.5% 0px, 70% 8px, 72.5% 0px,
+    75% 8px, 77.5% 0px, 80% 8px, 82.5% 0px, 85% 8px, 87.5% 0px, 90% 8px, 92.5% 0px, 95% 8px, 97.5% 0px, 100% 8px,
+
+    /* Right Edge */
+    100% calc(100% - 8px),
+
+    /* Bottom Zigzag Peaks & Valleys (20 sharp teeth) */
+    97.5% 100%, 95% calc(100% - 8px), 92.5% 100%, 90% calc(100% - 8px), 87.5% 100%, 85% calc(100% - 8px),
+    82.5% 100%, 80% calc(100% - 8px), 77.5% 100%, 75% calc(100% - 8px), 72.5% 100%, 70% calc(100% - 8px),
+    67.5% 100%, 65% calc(100% - 8px), 62.5% 100%, 60% calc(100% - 8px), 57.5% 100%, 55% calc(100% - 8px),
+    52.5% 100%, 50% calc(100% - 8px), 47.5% 100%, 45% calc(100% - 8px), 42.5% 100%, 40% calc(100% - 8px),
+    37.5% 100%, 35% calc(100% - 8px), 32.5% 100%, 30% calc(100% - 8px), 27.5% 100%, 25% calc(100% - 8px),
+    22.5% 100%, 20% calc(100% - 8px), 17.5% 100%, 15% calc(100% - 8px), 12.5% 100%, 10% calc(100% - 8px),
+    7.5% 100%, 5% calc(100% - 8px), 2.5% 100%, 0% calc(100% - 8px)
+  );
+}
+
+/* Barcode Representation */
+.receipt-barcode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.8px;
+  height: 32px;
+  width: 78%;
+  margin: 0 auto;
+}
+
+.receipt-barcode-bar {
+  background-color: #121316;
+  height: 100%;
+}
+
+/* Printer Base Capsule - Matches pro.reactbits.dev/docs/components/receipt-printer */
+.receipt-printer-chassis {
+  width: 320px;
+  height: 42px;
+  background: linear-gradient(180deg, #272930 0%, #15161b 100%);
+  border-radius: 14px;
+  box-shadow: 
+    0 18px 30px -6px rgba(15, 23, 42, 0.45),
+    0 6px 12px -2px rgba(15, 23, 42, 0.25),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.18);
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Covers the bottom edge of the paper stage so paper emerges directly from inside the mouth */
+  margin-top: -14px;
+}
+
+/* The dark slit / mouth where paper emerges */
+.receipt-printer-slot {
+  width: 290px;
+  height: 5px;
+  background-color: #08090c;
+  border-radius: 9999px;
+  box-shadow: 
+    inset 0 2px 3px rgba(0, 0, 0, 0.95),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Micro cutter blade serration teeth visible inside slot */
+.receipt-slot-cutter-teeth {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    #14161d 0px,
+    #14161d 3px,
+    #252834 3px,
+    #252834 6px
+  );
+  opacity: 0.85;
+}
+
+/* Status LED indicator on the bottom right */
+.receipt-printer-led {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981, 0 0 3px #34d399;
+}
+
+.receipt-printer-led--busy {
+  background-color: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b;
+  animation: led-blink 0.35s ease-in-out infinite alternate;
+}
+
+@keyframes led-blink {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+/* Torn animation: receipt lifts upward and tilts, fully exposing the bottom zigzag tear */
+.receipt-paper--tearing {
+  animation: paper-tear-rip 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  z-index: 35 !important;
+}
+
+@keyframes paper-tear-rip {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    filter: 
+      drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06))
+      drop-shadow(0 14px 28px rgba(15, 23, 42, 0.12));
+  }
+  40% {
+    transform: translateY(-26px) rotate(-3.5deg);
+    filter: 
+      drop-shadow(0 10px 18px rgba(15, 23, 42, 0.18))
+      drop-shadow(0 20px 32px rgba(15, 23, 42, 0.22));
+  }
+  100% {
+    transform: translateY(-52px) rotate(-1.5deg);
+    filter: 
+      drop-shadow(0 16px 26px rgba(15, 23, 42, 0.22))
+      drop-shadow(0 26px 42px rgba(15, 23, 42, 0.26));
+  }
+}

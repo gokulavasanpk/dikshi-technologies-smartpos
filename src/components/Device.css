@@ -1,0 +1,168 @@
+/* React Bits Pro - Device (3D Studio-Lit Phone Mockup) */
+.device-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  user-select: none;
+}
+
+.device-body {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.device-body--floating {
+  animation: device-float 6s ease-in-out infinite alternate;
+}
+
+/* 3D Interactive Entry Wobble / Nudge */
+.device-body--wobble {
+  animation: device-entry-wobble 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+}
+
+@keyframes device-entry-wobble {
+  0% {
+    transform: translate3d(0, 0px, 0px) rotateX(var(--dev-rx)) rotateY(var(--dev-ry)) rotateZ(var(--dev-rz));
+  }
+  18% {
+    transform: translate3d(0, -18px, 45px) rotateX(calc(var(--dev-rx) + 8deg)) rotateY(calc(var(--dev-ry) - 18deg)) rotateZ(calc(var(--dev-rz) - 3deg));
+  }
+  40% {
+    transform: translate3d(0, -22px, 50px) rotateX(calc(var(--dev-rx) - 8deg)) rotateY(calc(var(--dev-ry) + 20deg)) rotateZ(calc(var(--dev-rz) + 3deg));
+  }
+  62% {
+    transform: translate3d(0, -10px, 25px) rotateX(calc(var(--dev-rx) + 5deg)) rotateY(calc(var(--dev-ry) - 10deg)) rotateZ(calc(var(--dev-rz) - 1deg));
+  }
+  82% {
+    transform: translate3d(0, -3px, 10px) rotateX(calc(var(--dev-rx) - 2deg)) rotateY(calc(var(--dev-ry) + 4deg)) rotateZ(calc(var(--dev-rz)));
+  }
+  100% {
+    transform: translate3d(0, 0px, 0px) rotateX(var(--dev-rx)) rotateY(var(--dev-ry)) rotateZ(var(--dev-rz));
+  }
+}
+
+.device-container--wobble .device-reflection {
+  animation: glare-entry-sweep 1.6s ease-in-out forwards !important;
+}
+
+@keyframes glare-entry-sweep {
+  0% {
+    background: linear-gradient(110deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 40%, transparent 60%);
+    opacity: 0.2;
+  }
+  35% {
+    background: linear-gradient(170deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.3) 50%, transparent 70%);
+    opacity: 0.45;
+  }
+  65% {
+    background: linear-gradient(120deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 40%, transparent 60%);
+    opacity: 0.35;
+  }
+  100% {
+    background: linear-gradient(125deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 40%, transparent 60%);
+    opacity: 0.18;
+  }
+}
+
+.device-container--wobble .device-shadow {
+  animation: shadow-entry-wobble 1.6s ease-in-out forwards !important;
+}
+
+@keyframes shadow-entry-wobble {
+  0% {
+    transform: scale(0.95) translateY(0);
+    opacity: 0.55;
+  }
+  38% {
+    transform: scale(1.15) translateY(18px) skewX(8deg);
+    opacity: 0.3;
+  }
+  75% {
+    transform: scale(1.02) translateY(6px) skewX(-4deg);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(0.95) translateY(0);
+    opacity: 0.55;
+  }
+}
+
+@keyframes device-float {
+  0% {
+    transform: translateY(0px) rotateX(var(--dev-rx)) rotateY(var(--dev-ry)) rotateZ(var(--dev-rz));
+  }
+  100% {
+    transform: translateY(-12px) rotateX(calc(var(--dev-rx) + 2deg)) rotateY(calc(var(--dev-ry) - 2deg)) rotateZ(var(--dev-rz));
+  }
+}
+
+/* Metallic Finishes */
+.device-finish--black {
+  --frame-bg: linear-gradient(135deg, #2A2C34 0%, #16171C 45%, #0F1014 100%);
+  --frame-border: #3A3D47;
+  --frame-highlight: rgba(255, 255, 255, 0.22);
+  --frame-shadow: rgba(0, 0, 0, 0.7);
+  --btn-color: #24252B;
+}
+
+.device-finish--titanium {
+  --frame-bg: linear-gradient(135deg, #7F7B75 0%, #5E5B55 45%, #3D3B37 100%);
+  --frame-border: #96918A;
+  --frame-highlight: rgba(255, 250, 240, 0.35);
+  --frame-shadow: rgba(30, 28, 25, 0.65);
+  --btn-color: #68645E;
+}
+
+.device-finish--silver {
+  --frame-bg: linear-gradient(135deg, #E8EAED 0%, #C8CBD0 45%, #9AA0A6 100%);
+  --frame-border: #F1F3F4;
+  --frame-highlight: rgba(255, 255, 255, 0.85);
+  --frame-shadow: rgba(0, 0, 0, 0.4);
+  --btn-color: #C0C4CA;
+}
+
+.device-finish--gold {
+  --frame-bg: linear-gradient(135deg, #F9E7C4 0%, #D8BE8E 45%, #A88F5E 100%);
+  --frame-border: #FFE8BF;
+  --frame-highlight: rgba(255, 255, 255, 0.6);
+  --frame-shadow: rgba(60, 45, 20, 0.6);
+  --btn-color: #CDB384;
+}
+
+.device-finish--blue {
+  --frame-bg: linear-gradient(135deg, #2D3D52 0%, #1B2636 45%, #0F1722 100%);
+  --frame-border: #445873;
+  --frame-highlight: rgba(180, 215, 255, 0.3);
+  --frame-shadow: rgba(5, 10, 20, 0.75);
+  --btn-color: #27364B;
+}
+
+/* Glass Reflection Sheen */
+.device-reflection {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 40;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+}
+
+/* Contact Shadow */
+.device-shadow {
+  position: absolute;
+  bottom: -40px;
+  left: 5%;
+  right: 5%;
+  height: 50px;
+  border-radius: 50%;
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: -1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
