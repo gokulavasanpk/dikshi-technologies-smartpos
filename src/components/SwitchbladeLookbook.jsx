@@ -126,26 +126,20 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     });
   }, []);
 
-  // Responsive card count calculation and metric caching with guaranteed anti-collision spacing
+  // Responsive card count calculation and metric caching
   useEffect(() => {
     const handleResize = () => {
       if (!stageRef.current) return;
       const winW = window.innerWidth;
       const cardW = calcCardWidth(winW);
-      // Ensure generous gap between cards so they never collide or bunch up
-      const minGap = Math.max(28, Math.round(cardW * 0.38));
+      const cardGap = cardW + Math.min(Math.max(16, 0.016 * winW), 32);
       const clientW = stageRef.current.clientWidth || winW;
       const clientH = stageRef.current.clientHeight || 480;
-
-      // Calculate how many cards needed to cover the track seamlessly
-      const neededCards = Math.ceil((clientW + cardW * 2) / (cardW + minGap));
-      const sets = Math.max(2, Math.ceil(neededCards / PRODUCTS.length));
-      const count = sets * PRODUCTS.length;
-
-      const stepDistance = (clientW + cardW * 2) / count;
-      const spacing = Math.max(cardW + minGap, stepDistance);
-      const trackW = count * spacing;
-
+      const trackW = clientW + 2 * cardW;
+      const needed = Math.ceil((clientW + 2 * cardW) / cardGap);
+      const count = winW < 640
+        ? PRODUCTS.length
+        : Math.max(PRODUCTS.length * 2, Math.ceil(needed / PRODUCTS.length) * PRODUCTS.length);
       setTotalCards(count);
 
       layoutMetricsRef.current = {
@@ -154,7 +148,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         clientW,
         clientH,
         trackW,
-        spacing
+        spacing: trackW / count
       };
     };
 
@@ -181,24 +175,25 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
 
       const { cardW, clientW, clientH, trackW, spacing } = layoutMetricsRef.current;
 
-      // 1. Smooth Selection: Always advance FORWARD in the Right-to-Left flow to reach the target card
+      // 1. Smooth Glide to Selected Target Card (Exponential Spring Damping)
       if (isTargetingRef.current && targetOffsetRef.current !== null) {
         let diff = (targetOffsetRef.current - scrollOffsetRef.current) % trackW;
-        if (diff < 0) diff += trackW; // Always move forward in the natural Right-to-Left flow
+        if (diff > trackW / 2) diff -= trackW;
+        if (diff < -trackW / 2) diff += trackW;
 
-        if (Math.abs(diff) < 0.8) {
+        if (Math.abs(diff) < 0.6) {
           scrollOffsetRef.current = targetOffsetRef.current;
           isTargetingRef.current = false;
           targetOffsetRef.current = null;
         } else {
           // Smooth deceleration glide factor
-          const factor = Math.min(1, dt * 7.5);
+          const factor = Math.min(1, dt * 9.5);
           scrollOffsetRef.current = (scrollOffsetRef.current + diff * factor) % trackW;
           if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
         }
       } else if (!isDraggingRef.current && isPlaying && now > holdUntilRef.current) {
-        // 2. Normal Continuous Conveyor Scroll: Smoothly flowing Right-to-Left into the model
-        const step = dt * (cardW / 2.8) * speedMultiplier * scrollDir;
+        // 2. Normal Continuous Conveyor Scroll
+        const step = dt * (cardW / 2.9) * speedMultiplier * scrollDir;
         scrollOffsetRef.current = (scrollOffsetRef.current + step) % trackW;
         if (scrollOffsetRef.current < 0) scrollOffsetRef.current += trackW;
       } else if (!isDraggingRef.current && Math.abs(dragVelocityRef.current) > 0.4) {
@@ -209,7 +204,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
       }
 
       // Exact Switchblade trigger line (viewer's right, next to model)
-      const centerTarget = clientW / 2 + 0.85 * cardW;
+      const centerTarget = clientW / 2 + 0.9 * cardW;
       let closestIdx = -1;
       let minDistance = Infinity;
 
@@ -221,12 +216,8 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         if (x < 0) x += trackW;
         x -= cardW;
 
-        // Perfectly symmetrical Cosine U-curve across the stage width
-        const progress = (x + cardW / 2) / clientW;
-        const clampedProg = Math.max(-0.2, Math.min(1.2, progress));
-        const normalizedY = 0.5 - 0.5 * Math.cos(clampedProg * Math.PI * 2);
-        const y = 0.04 * clientH + 0.52 * clientH * normalizedY;
-
+        // Mathematical U-curve
+        const y = 0.03 * clientH + 0.55 * clientH * (0.5 - 0.5 * Math.cos((x / (1.2 * clientW)) * Math.PI * 2));
         cardEl.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
 
         // Keep cards behind the central model (z: 1 to 20)
@@ -335,7 +326,7 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     isDraggingRef.current = false;
   };
 
-  // Smooth Selection: Glides conveyor FORWARD to target card and holds view cleanly
+  // Smooth Selection: Glides conveyor to target card and holds view cleanly
   const selectByKey = (key) => {
     if (key === 'reset') {
       setActiveIdx(-1);
@@ -349,11 +340,11 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
     }
 
     const { cardW, clientW, trackW, spacing } = layoutMetricsRef.current;
-    const centerTarget = clientW / 2 + 0.85 * cardW;
+    const centerTarget = clientW / 2 + 0.9 * cardW;
 
-    // Find the next upcoming instance of this product ahead in the Right-to-Left conveyor flow
+    // Find closest instance of this product on the continuous ring
     let bestIdx = -1;
-    let shortestForwardDist = Infinity;
+    let shortestDist = Infinity;
     let bestNewOffset = 0;
 
     for (let i = 0; i < totalCards; i++) {
@@ -361,12 +352,13 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
         let candidateOffset = (i * spacing - (centerTarget + cardW / 2)) % trackW;
         if (candidateOffset < 0) candidateOffset += trackW;
 
-        // Ensure we always travel forward in the Right-to-Left flow
-        let forwardDiff = (candidateOffset - scrollOffsetRef.current) % trackW;
-        if (forwardDiff < 0) forwardDiff += trackW;
+        let diff = (candidateOffset - scrollOffsetRef.current) % trackW;
+        if (diff > trackW / 2) diff -= trackW;
+        if (diff < -trackW / 2) diff += trackW;
 
-        if (forwardDiff < shortestForwardDist) {
-          shortestForwardDist = forwardDiff;
+        const absDist = Math.abs(diff);
+        if (absDist < shortestDist) {
+          shortestDist = absDist;
           bestIdx = i;
           bestNewOffset = candidateOffset;
         }
@@ -510,13 +502,13 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
                   e.stopPropagation();
                   selectByKey(prod.key);
                 }}
-                className={`absolute top-0 left-0 flex flex-col pointer-events-auto transition-all duration-300 cursor-pointer ${
-                  isActive ? 'scale-110 z-20' : 'hover:scale-105 opacity-90 hover:opacity-100'
+                className={`absolute top-0 left-0 flex flex-col bg-white pointer-events-auto transition-colors duration-200 shadow-sm rounded-lg overflow-hidden ${
+                  isActive ? '!border-2 !border-[#0456DD] !shadow-md' : 'border border-[rgba(13,13,13,0.12)]'
                 }`}
                 style={{
                   width: 'clamp(82px, 11.4vw, 168px)',
                   height: 'calc(clamp(82px, 11.4vw, 168px) * 1.09)',
-                  padding: 'clamp(4px, 0.8vw, 8px)',
+                  padding: 'clamp(6px, 1vw, 14px)',
                   willChange: 'transform'
                 }}
               >
@@ -524,17 +516,11 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
                   <img
                     src={prod.thumb}
                     alt={prod.label}
-                    className={`w-full h-full object-contain pointer-events-none transition-all duration-300 ${
-                      isActive
-                        ? 'drop-shadow-[0_8px_16px_rgba(4,86,221,0.3)] brightness-105'
-                        : 'drop-shadow-[0_4px_10px_rgba(0,0,0,0.1)]'
-                    }`}
+                    className="w-full h-full object-contain pointer-events-none"
                     loading="eager"
                   />
                 </div>
-                <p className={`mt-1 text-center flex-shrink-0 whitespace-nowrap overflow-hidden text-ellipsis w-full px-0.5 font-mono text-[clamp(9px,0.85vw,13px)] transition-colors duration-200 ${
-                  isActive ? 'font-bold text-[#0456DD]' : 'font-medium text-slate-700'
-                }`}>
+                <p className="mt-1 text-center flex-shrink-0 whitespace-nowrap overflow-hidden text-ellipsis w-full px-0.5 font-mono font-medium text-[clamp(9px,0.85vw,13px)] text-[#0D0D0D]">
                   {prod.label}
                 </p>
               </div>
@@ -547,7 +533,8 @@ export default function SwitchbladeLookbook({ onAddToCart }) {
           className="absolute left-1/2 bottom-0 -translate-x-1/2 pointer-events-none flex items-end justify-center"
           style={{
             height: '98%',
-            width: 'clamp(240px, 36vw, 480px)',
+            width: 'auto',
+            aspectRatio: activeKey ? '5452 / 5136' : '1333 / 2000',
             zIndex: 35
           }}
         >

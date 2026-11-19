@@ -3,45 +3,22 @@ import SpotlightCard from './SpotlightCard';
 import GooeyNav from './GooeyNav';
 
 const SAMPLE_ITEMS = [
-  // Silk Sarees (Ethnic Wear) - 6 items
   { id: 'DIK-SAR-01', name: 'Banarasi Kanjivaram Silk Saree', price: 4499, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-banarasi.jpg', tag: 'Pure Zari Silk' },
   { id: 'DIK-SAR-02', name: 'Chanderi Zari Handloom Saree', price: 3299, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-chanderi.jpg', tag: 'Handloom Silk' },
   { id: 'DIK-SAR-03', name: 'Royal Gold Tissue Bridal Saree', price: 5499, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/luxury-silk-texture.png', tag: 'Bridal Tissue' },
   { id: 'DIK-SAR-04', name: 'Kanjivaram Mulberry Silk Saree', price: 6299, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/golden-silk-texture.jpg', tag: 'Pure Mulberry' },
   { id: 'DIK-SAR-05', name: 'Paithani Pure Silk Brocade', price: 4899, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-banarasi.jpg', tag: 'Peacock Pallu' },
   { id: 'DIK-SAR-06', name: 'Tussar Hand-Painted Kalamkari Saree', price: 3799, category: 'Ethnic Wear', size: 'Free Size', image: '/assets/saree-chanderi.jpg', tag: 'Natural Dyes' },
-
-  // Kurtis & Sets (Women Festive) - 6 items
-  { id: 'DIK-KUR-01', name: 'Chikankari Georgette Long Kurti', price: 2199, category: 'Women Festive', size: 'M', image: '/assets/kurti-anarkali.jpg', tag: 'Lucknowi Handwork' },
-  { id: 'DIK-KUR-02', name: 'Handcrafted Anarkali Kurti Set', price: 1899, category: 'Women Festive', size: 'M', image: '/assets/kurti-anarkali.jpg', tag: 'Festive Georgette' },
-  { id: 'DIK-KUR-03', name: 'Jaipuri Block-Print Cotton Kurti', price: 1299, category: 'Women Festive', size: 'L', image: '/assets/kurti-jaipuri.jpg', tag: 'Pure Mulmul Cotton' },
-  { id: 'DIK-KUR-04', name: 'Mirror-Work Sharara Festive Set', price: 2799, category: 'Women Festive', size: 'S', image: '/assets/kurti-anarkali.jpg', tag: 'Kutch Mirror' },
-  { id: 'DIK-KUR-05', name: 'Bandhani Silk Straight Kurti', price: 1599, category: 'Women Festive', size: 'XL', image: '/assets/kurti-jaipuri.jpg', tag: 'Jaipur Bandhej' },
-  { id: 'DIK-KUR-06', name: 'Embroidered Velvet Festive Kaftan', price: 2499, category: 'Women Festive', size: 'Free Size', image: '/assets/kurti-anarkali.jpg', tag: 'Royal Velvet' },
-
-  // Men's Apparel - 6 items
-  { id: 'DIK-DEN-01', name: 'Raw Selvedge Rigid Indigo Denim', price: 2499, category: "Men's Apparel", size: '34', image: '/assets/mens-denim.jpg', tag: 'Japanese Selvedge' },
-  { id: 'DIK-DEN-03', name: 'Slim Fit Stretch Indigo Denim', price: 1499, category: "Men's Apparel", size: '32', image: '/assets/mens-denim.jpg', tag: 'Flex Stretch Indigo' },
-  { id: 'DIK-MEN-01', name: 'Tussar Silk Nehru Jacket Kurta', price: 2899, category: "Men's Apparel", size: 'L', image: '/assets/mens-kurta.jpg', tag: 'Handloom Tussar' },
-  { id: 'DIK-MEN-02', name: 'Embroidered Sherwani Wedding Set', price: 6999, category: "Men's Apparel", size: '40', image: '/assets/mens-kurta.jpg', tag: 'Zardozi Wedding' },
-  { id: 'DIK-MEN-03', name: 'Pure Khadi Linen Casual Shirt', price: 1399, category: "Men's Apparel", size: 'M', image: '/assets/mens-kurta.jpg', tag: 'Organic Khadi' },
-  { id: 'DIK-MEN-04', name: 'Royal Linen Festive Kurta Pajama', price: 2199, category: "Men's Apparel", size: 'XL', image: '/assets/mens-kurta.jpg', tag: 'Premium Linen' },
-
-  // Jewelry (Fancy Ornaments) - 6 items
-  { id: 'DIK-JWL-01', name: 'Kundan Choker Polki Necklace Set', price: 3499, category: 'Fancy Ornaments', size: 'Free Size', image: '/assets/one-standard-earrings.png', tag: 'Jadau Kundan' },
-  { id: 'DIK-JWL-77', name: 'Golden Flame Sculptural Earrings', price: 1299, category: 'Fancy Ornaments', size: 'One Size', image: '/assets/one-standard-earrings.png', tag: 'Fluid 18K Gold' },
-  { id: 'DIK-JWL-02', name: 'Temple Gold Coin Bridal Haram', price: 4299, category: 'Fancy Ornaments', size: 'One Size', image: '/assets/one-standard-earrings.png', tag: 'Antique Temple' },
-  { id: 'DIK-JWL-03', name: 'Meenakari Jhumka Hanging Earrings', price: 999, category: 'Fancy Ornaments', size: 'One Size', image: '/assets/one-standard-earrings.png', tag: 'Jaipur Meena' },
-  { id: 'DIK-JWL-04', name: 'Emerald Cut Solitaire Bangle Pair', price: 1799, category: 'Fancy Ornaments', size: '2.6', image: '/assets/one-standard-earrings.png', tag: 'Cubic Zirconia' },
-  { id: 'DIK-JWL-05', name: 'Pearl & Stone Layered Mathapatti', price: 1599, category: 'Fancy Ornaments', size: 'Free Size', image: '/assets/one-standard-earrings.png', tag: 'Hyderabadi Pearls' },
-
-  // Accessories - 6 items
   { id: 'DIK-CAP-01', name: 'Limited Edition Star Snapback Cap', price: 899, category: 'Accessories', size: 'Free Size', image: '/assets/one-standard-cap.png', tag: 'Embroidered Cotton' },
+  { id: 'DIK-JWL-77', name: 'Golden Flame Sculptural Earrings', price: 1299, category: 'Fancy Ornaments', size: 'One Size', image: '/assets/one-standard-earrings.png', tag: 'Fluid 18K Gold' },
   { id: 'DIK-WTC-88', name: 'Tactical Matte Chronograph Watch', price: 3999, category: 'Accessories', size: 'Standard', image: '/assets/one-standard-watch.png', tag: 'Tactical Matte' },
   { id: 'DIK-BAG-95', name: 'Ochre Suede Grommet Hobo Bag', price: 2199, category: 'Accessories', size: 'Standard', image: '/assets/one-standard-bag.png', tag: 'Boutique Suede' },
   { id: 'DIK-EYE-42', name: 'Dark Shield UV400 Cyber Shades', price: 1499, category: 'Accessories', size: 'Free Size', image: '/assets/one-standard-sunglasses.png', tag: 'UV400 Shield' },
   { id: 'DIK-AUD-20', name: 'Studio Wireless Metallic Headphones', price: 2499, category: 'Accessories', size: 'Standard', image: '/assets/one-standard-headphones2.png', tag: 'High-Fi Acoustic' },
-  { id: 'DIK-ACC-06', name: 'Embroidered Velvet Zari Potli Bag', price: 1199, category: 'Accessories', size: 'Standard', image: '/assets/one-standard-bag.png', tag: 'Bridal Potli' }
+  { id: 'DIK-KUR-02', name: 'Handcrafted Anarkali Kurti Set', price: 1899, category: 'Women Festive', size: 'M', image: '/assets/kurti-anarkali.jpg', tag: 'Festive Georgette' },
+  { id: 'DIK-KUR-03', name: 'Jaipuri Block-Print Cotton Kurti', price: 1299, category: 'Women Festive', size: 'L', image: '/assets/kurti-jaipuri.jpg', tag: 'Pure Mulmul Cotton' },
+  { id: 'DIK-DEN-03', name: 'Slim Fit Stretch Indigo Denim', price: 1499, category: "Men's Apparel", size: '32', image: '/assets/mens-denim.jpg', tag: 'Flex Stretch Indigo' },
+  { id: 'DIK-MEN-04', name: 'Royal Linen Festive Kurta Pajama', price: 2199, category: "Men's Apparel", size: 'XL', image: '/assets/mens-kurta.jpg', tag: 'Premium Linen' }
 ];
 
 const CATEGORY_TABS = [
